@@ -10,3 +10,5 @@ MakeOctree creates an octree from a single ASCII XYZ point cloud. The tool split
 The Webviewer takes full advantage of WebGL and HTML5. Visibility in the octree is determined through view-frustum culling. A visible list keeps track of all visible nodes. Multiple separate threads keep reloading new nodes from the server if they are in the list and have not been loaded yet. 
 
 Interactive frame rates are maintained by progressively rendering octants and points. Once camera movement stops, the view fills in and converges to the right solution. All points are rendered into a fixe-size frame buffer render target. This overcomes some issues how different browsers handle non-double buffered contexts. Finally, the resulting image is up-scaled (or downscaled depending on resolution) and displayed using FXAA to smoothen the result.
+
+The resulting image looks something like this: ![Webviewer output][docs/output.png]
