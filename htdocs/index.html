@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello Pointcloud!</title>
+
+	<style>
+	html, body {
+		padding: 0px;
+		margin: 0px;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+
+
+
+	.btn {
+		background:rgba(52, 152,219, 0.4);
+		font-family: Arial;
+		color: #ffffff;
+		font-size: 15px;
+		border: solid #c40c40 0px;
+		padding: 6px 20px 6px 20px;
+	}
+
+	.btn:hover {
+		background:rgba(60,176,253, 0.9);
+		text-decoration: none;
+	}
+
+	.buttonBar { 
+		float:left;
+		position: absolute;
+		left: 10px;
+		top: 10px;
+		z-index: 100;
+	}
+
+	.buildInfo { 
+		float:left;
+		position:absolute;
+		left: 10px;
+		bottom:10px;
+		color:#f0f0f0;
+		font-size: 10pt;
+	}
+	
+	.pointInfo { 
+		float:left;
+		position:absolute;
+		right: 10px;
+		bottom:10px;
+		color:#f0f0f0;
+		font-size: 12pt;
+	}
+
+
+
+	.modalDialog {
+		position: fixed;
+		font-family: Arial, Helvetica, sans-serif;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: rgba(0,0,0,0.8);
+		z-index: 99999;
+		opacity:0;
+		-webkit-transition: opacity 400ms ease-in;
+		-moz-transition: opacity 400ms ease-in;
+		transition: opacity 400ms ease-in;
+		pointer-events: none;
+	}
+
+
+
+	.modalDialog:target {
+		opacity:1;
+		pointer-events: auto;
+	}
+
+	.modalDialog > div {
+		width: 400px;
+		position: relative;
+		margin: 10% auto;
+		padding: 5px 20px 13px 20px;
+		border-radius: 10px;
+		background: #fff;
+		background: -moz-linear-gradient(#fff, #999);
+		background: -webkit-linear-gradient(#fff, #999);
+		background: -o-linear-gradient(#fff, #999);
+	}
+
+
+
+	.close {
+		background: #606061;
+		color: #FFFFFF;
+		line-height: 25px;
+		position: absolute;
+		right: -12px;
+		text-align: center;
+		top: -10px;
+		width: 24px;
+		text-decoration: none;
+		font-weight: bold;
+		-webkit-border-radius: 12px;
+		-moz-border-radius: 12px;
+		border-radius: 12px;
+		-moz-box-shadow: 1px 1px 3px #000;
+		-webkit-box-shadow: 1px 1px 3px #000;
+		box-shadow: 1px 1px 3px #000;
+	}
+
+	.close:hover { background: #00d9ff; }
+
+
+
+
+
+
+
+	
+	canvas {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		z-index: 0;
+	}
+	
+	
+
+
+	</style>
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+	<script src="scripts/gl-matrix.js"></script>
+	<script src="scripts/aabb.js"></script>
+	<script src="scripts/camera.js"></script>
+	<script src="scripts/ray.js"></script>
+	<script src="scripts/stats.js"></script>
+	<script src="scripts/shader.js"></script>
+	<script src="scripts/geometry.js"></script>
+	<script src="scripts/dat-gui.js"></script>
+	<script src="scripts/framebuffer.js"></script>
+	<script src="scripts/octree.js"></script>
+	<script src="scripts/main.js"></script>
+	<script src='scripts/nprogress.js'></script>
+
+	<link rel='stylesheet' href='styles/nprogress.css'/>
+
+</head>
+	<body onload="main('../taliesin.webgl/Taliesin.json')" >
+	<canvas id="canvas" width="800" height="600"></canvas>
+
+	<div class="buttonBar">
+		<button type="button" class="btn" onclick="toggleGrid()">Toggle Grid</button>
+		<!--
+		<button type="button" class="btn" onclick="toggleBBox()">Toggle BBox</button> -->
+		<button type="button" class="btn" onclick="resetCamera()">Reset Camera</button>
+		<button type="button" class="btn" onclick="increaseDetail()">Increase Detail</button>
+		<button type="button" class="btn" onclick="decreaseDetail()">Decrease Detail</button>
+		<!--<button type="button" class="btn" onclick="toggleFXAA()">Toggle Anti-aliasing</button> -->
+		<button type="button" class="btn" onclick="location.href='#openHelp';">Help</button>
+	</div>
+
+	<div class="buildInfo">Build: 20150803</div>
+	<div class="pointInfo" id="pointsLoaded">Points: 0</div>
+
+
+	<div id="openHelp" class="modalDialog">
+	<div>
+		<a href="#close" title="Close" class="close">X</a>
+		<h2>Help and Controls</h2>
+		<h3>Mouse Controls</h3>
+		<p><ul>
+		<li>Left mouse drag -- Rotate camera</li>
+		<li>Right mouse drag -- Move camera focus</li>
+		<li>Middle mouse drag -- Zoom camera</li>
+		</ul></p>
+		<h3>Touchpad Controls</h3>
+		<p><ul>
+		<li>Left mouse drag -- Rotate camera </li>
+		<li>Shift + Left mouse -- Pan camera </li>
+		<li>Ctrl + Left mouse -- Zoom camera </li>
+		</ul></p>
+		<h3>Touch Controls</h3>
+		<p><ul>
+		<li>Single finger drag -- Rotate camera</li>
+		<li>Two finger drag -- Pan camera</li>
+		<li>Two finger pinch -- Zoom camera </li>
+		</ul></p>
+		<h3>Options</h3>
+		<p><ul>
+		<li>Toggle Grid -- Displays a grid on the ground plane</li>
+		<li>Reset Camera -- Resets the camera to the initial position</li>
+		<li>In/Decrease Detail -- Changes max octree recursion depth</li>
+		<li>Help -- This window</li>
+		</ul></p>
+		<h3>Debug Commands</h3>
+		<p><ul>
+		<li>X -- Toggle FXAA anti-aliasing</li>
+		<li>A/Z -- In/Decrease max octree recursion depth</li>
+		<li>B -- Toggle bounding box display</li>
+		</ul></p>
+	</div>
+	</div>
+	</body>
+</html>
