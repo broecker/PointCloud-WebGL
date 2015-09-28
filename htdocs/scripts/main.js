@@ -671,7 +671,7 @@ function handleKeyup(event) {
 
 
 
-function init(path) {
+function init(datapath, shaderpath) {
   canvas = document.getElementById("canvas");
   
   canvas.addEventListener("webglcontextlost", function(event) {
@@ -711,7 +711,7 @@ function init(path) {
   global.camera = createOrbitalCamera();
   global.camera.radius = 20.0;
 
-  shader.loadAll(shaders);
+  shader.loadAll(shaders, shaderpath);
   geometry.createGridBuffer();
 
   // create FPS meter
@@ -746,7 +746,7 @@ function init(path) {
 
   // initialize octree
   octree.initLoadQueue(global.maxConcurrentLoads);
-  geometry.octree = octree.parseJSON(path);
+  geometry.octree = octree.parseJSON(datapath);
 
   window.setInterval(octree.updateLoadQueue, 200);
 
@@ -779,9 +779,9 @@ function getBasePath(address) {
 }
 
 
-function main(path) {
+function main(datapath, shaderpath) {
   
-  init(path);
+  init(datapath, shaderpath);
 
 
 
