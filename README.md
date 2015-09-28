@@ -11,4 +11,4 @@ The Webviewer takes full advantage of WebGL and HTML5. Visibility in the octree 
 
 Interactive frame rates are maintained by progressively rendering octants and points. Once camera movement stops, the view fills in and converges to the right solution. All points are rendered into a fixe-size frame buffer render target. This overcomes some issues how different browsers handle non-double buffered contexts. Finally, the resulting image is up-scaled (or downscaled depending on resolution) and displayed using FXAA to smoothen the result.
 
-The resulting image looks something like this: ![Webviewer output][docs/output.png]
+The resulting image looks something like this: ![Webviewer output](docs/output.png)
