@@ -88,7 +88,7 @@ function isMobile() {
 function initWebGL(canvas) {  
   try {
     // Try to grab the standard context. If it fails, fallback to experimental.
-    gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    gl = canvas.getContext("webgl", {preserveDrawingBuffer : true}) || canvas.getContext("experimental-webgl", {preserveDrawingBuffer : true});
     gl.viewportWidth = canvas.width;
     gl.viewportHeight = canvas.height;
 
@@ -765,6 +765,14 @@ function toggleGrid() {
 function toggleBBox() { 
   global.enableBBox = !global.enableBBox;
   global.updateVisibility = true;
+}
+
+
+/// saves the current opengl canvas in an image and opens it in a new window 
+function saveScreenShot() {
+  var image = new Image();
+  image.src = canvas.toDataURL("image/png");
+   window.open(image.src);  
 }
 
 function toggleFXAA() { 
